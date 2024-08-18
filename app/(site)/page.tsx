@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function Home() {
   const { status } = useSession();
@@ -36,6 +37,39 @@ export default function Home() {
               </>
             ) : null
             }
+          </div>
+        </section>
+        <section className="bg-primary-50 w-full">
+          <div className="max-w-5xl w-full mx-auto px-8 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center">
+              <div className="md:text-right order-1 px-6 md:px-0">
+                <h2 className="text-2xl font-semibold">Step 1</h2>
+                <p>Sign in, then create a link in your dashboard.</p>
+              </div>
+              <div className="order-2">
+              <Image src="/step-1.png" alt="Step 1" layout="responsive" width={500} height={300} />
+              </div>
+              <div className="order-3 md:order-4 px-6 md:px-0">
+                <h2 className="text-2xl font-semibold">Step 2</h2>
+                <p>
+                  Send the link to someone you want to invite to your
+                  repository.
+                </p>
+              </div>
+              <div className="order-4 md:order-3">
+                <Image src="/step-2.png" alt="Step 2" layout="responsive" width={500} height={300} />
+              </div>
+              <div className="md:text-right order-5 px-6 md:px-0">
+                <h2 className="text-2xl font-semibold">Step 3</h2>
+                <p>
+                  When they click the link and accept the invite, they'll be
+                  added to the repository!
+                </p>
+              </div>
+              <div className="order-6">
+                <Image src="/step-3.png" alt="Step 3" layout="responsive" width={500} height={300} />
+              </div>
+            </div>
           </div>
         </section>
       </main>
