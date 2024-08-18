@@ -24,6 +24,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+        if (url === `${baseUrl}/?callbackUrl=%2Fdashboard`) {
+          return `${baseUrl}/dashboard`;
+        }
+        return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async signIn({ account }) {
       if (account) {
         try {
