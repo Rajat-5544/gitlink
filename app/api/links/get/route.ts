@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/utils/authOptions';
 import prisma from '@/app/libs/prismadb';
+import { Link} from "@/app/dashboard/dashboard";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const links = await prisma.link.findMany({
+    const links: Link[] = await prisma.link.findMany({
       orderBy: [
         {
           createdAt: "desc",
@@ -35,7 +36,10 @@ export async function POST(req: NextRequest) {
           in: body.repoIds,
         },
       },
-      include: {
+      select: {
+        id: true,
+        repoId: true,
+        revoked: true,
         _count: {
           select: {
             uses: true,

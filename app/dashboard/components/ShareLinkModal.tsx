@@ -1,10 +1,11 @@
-import { Transition, Dialog, DialogPanel, TransitionChild, DialogTitle } from "@headlessui/react";
+import { Transition, Dialog, TransitionChild, DialogTitle, Switch } from "@headlessui/react";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { Link as LinkType } from "@/app/dashboard/dashboard";
 import Image from "next/image";
 import { HiCheck, HiOutlineClipboardCopy, HiX } from "react-icons/hi";
 import CopyButton from "./CopyButton";
 import { ModalContext } from "./ShareLink";
+import clsx from 'clsx';
 
 interface Use {
   user: {
@@ -14,6 +15,7 @@ interface Use {
 
 const ShareLinkModal = ({ link }: { link: LinkType }) => {
   const [uses, setUses] = useState<Use[] | null>(null);
+  const [revoked, setRevoked] = useState(link.revoked);
   const { modalOpen, setModalOpen } = useContext(ModalContext);
 
   const getUses = async () => {
@@ -35,6 +37,17 @@ const ShareLinkModal = ({ link }: { link: LinkType }) => {
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const changeRevoked = async (value: boolean) => {
+    setRevoked(value);
+    await fetch("/api/links/edit", {
+      method: "POST",
+      body: JSON.stringify({
+        id: link.id,
+        revoked: value,
+      }),
+    });
   };
 
   return (
@@ -91,6 +104,38 @@ const ShareLinkModal = ({ link }: { link: LinkType }) => {
                       </div>
                     </CopyButton.Copied>
                   </CopyButton>
+                  <div className="flex justify-between items-center gap-4">
+                    <div>
+                      Revoke Link{" "}
+                      <span className="text-sm text-gray-600">
+                        (link will stop working when revoked)
+                      </span>
+                    </div>
+                    <div>
+                      <Switch
+                        checked={revoked}
+                        onChange={changeRevoked}
+                        className={clsx(
+                          'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200',
+                          {
+                            'bg-primary-500': revoked,
+                            'bg-gray-300': !revoked
+                          }
+                        )}
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={clsx(
+                            'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200',
+                            {
+                              'translate-x-5': revoked,
+                              'translate-x-0': !revoked
+                            }
+                          )}
+                        />
+                      </Switch>
+                    </div>
+                  </div>
                   <div className="mt-4">
                   {uses === null ? null : uses.length === 0 ? (
                       <>No one has used this link yet!</>

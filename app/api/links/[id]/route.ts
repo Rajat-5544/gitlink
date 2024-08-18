@@ -21,10 +21,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       },
       select: {
         repoName: true,
+        revoked: true,
       },
     });
     
-    if (!link) {
+    if (!link || link.revoked) {
       return NextResponse.json({ error: 'Link not found' }, { status: 404 });
     }
     

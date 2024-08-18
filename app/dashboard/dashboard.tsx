@@ -15,6 +15,7 @@ export interface RepoType {
 export interface Link {
   repoId: number;
   id: string;
+  revoked: boolean;
   _count: {
     uses: number;
   };
@@ -97,6 +98,10 @@ const Dashboard = ({ initialPage }: { initialPage: number }) => {
       })();
     }
   }, [status, page]);
+  useEffect(() => {
+    document.body.classList.add("bg-gray-100");
+    return () => document.body.classList.remove("bg-gray-100");
+  }, []);
   if (status === "loading") {
     return null;
   }
